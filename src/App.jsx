@@ -46,7 +46,7 @@ function App() {
   const fetchStudents = async () => {
     try {
       console.log("🔎 Sending filters:", filters);
-      const res = await axios.get("http://localhost:5000/students", {
+      const res = await axios.get("https://campus-api-u919.onrender.com/students", {
         params: filters,
       });
       console.log("✅ Response received:", res.data.length);
