@@ -42,21 +42,25 @@ function App() {
       "SC Boys","SC Girls","ST Boys","ST Girls","EWS GEN OU","EWS Girls OU"
     ],
   };
+const fetchStudents = async () => {
+  try {
+    console.log("🔎 Sending filters:", filters);
+    const res = await axios.get("https://campus-api-u919.onrender.com/students", {
+      params: filters,
+    });
+    console.log("✅ Response received:", res.data.length);
 
-  const fetchStudents = async () => {
-    try {
-      console.log("🔎 Sending filters:", filters);
-      const res = await axios.get("https://campus-api-u919.onrender.com/students", {
-        params: filters,
-      });
-      console.log("✅ Response received:", res.data.length);
+    // ✅ Replace with unique results only once
+    const unique = Array.from(
+      new Map(res.data.map(item => [item._id, item])).values()
+    );
 
-      // ✅ replace, not append → avoids duplicates
-      setStudents([...res.data]);
-    } catch (err) {
-      console.error("Error fetching students:", err);
-    }
-  };
+    setStudents(unique);
+  } catch (err) {
+    console.error("Error fetching students:", err);
+  }
+};
+
 
   // ✅ Fetch once when app opens
   useEffect(() => {
