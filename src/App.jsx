@@ -13,16 +13,16 @@ function App() {
     maxRank: "",
   });
 
-  // 👇 NEW: frontend-only student info for PDF
+  // 👇 Student info for PDF header
   const [studentInfo, setStudentInfo] = useState({
     name: "",
     rank: "",
     caste: "",
   });
 
-  const [showApp, setShowApp] = useState(false); // 👈 Controls welcome page
+  const [showApp, setShowApp] = useState(false);
 
-  // ✅ Hardcoded dropdown options
+  // ✅ Dropdown options
   const filterOptions = {
     branches: [
       "CIV","CSE","ECE","MEC","CSD","CSM","EEE","INF","PHM","AGR","AIM",
@@ -42,30 +42,26 @@ function App() {
       "SC Boys","SC Girls","ST Boys","ST Girls","EWS GEN OU","EWS Girls OU"
     ],
   };
-const fetchStudents = async () => {
-  try {
-    console.log("🔎 Sending filters:", filters);
-    const res = await axios.get("https://campus-api-u919.onrender.com/students", {
-      params: filters,
-    });
-    console.log("✅ Response received:", res.data.length);
 
-    // ✅ Replace with unique results only once
-    const unique = Array.from(
-      new Map(res.data.map(item => [item._id, item])).values()
-    );
+  const fetchStudents = async () => {
+    try {
+      console.log("🔎 Sending filters:", filters);
+      const res = await axios.get("https://campus-api-u919.onrender.com/students", {
+        params: filters,
+      });
+      console.log("✅ Response received:", res.data.length);
 
-    setStudents(unique);
-  } catch (err) {
-    console.error("Error fetching students:", err);
-  }
-};
+      // 👉 Directly use backend response (already unique)
+      setStudents(res.data);
+    } catch (err) {
+      console.error("Error fetching students:", err);
+    }
+  };
 
-
-  // ✅ Fetch once when app opens
+  // Fetch once when app opens
   useEffect(() => {
     if (showApp) {
-      fetchStudents(); // runs only once when you click 🚀 Open
+      fetchStudents();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showApp]);
@@ -162,7 +158,7 @@ const fetchStudents = async () => {
     doc.save("students.pdf");
   };
 
-  // ✅ For filters
+  // Filters
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
@@ -175,7 +171,7 @@ const fetchStudents = async () => {
       minRank: "",
       maxRank: "",
     });
-    fetchStudents(); // ✅ reset shows all data again
+    fetchStudents();
   };
 
   // ✅ If not opened yet, show Welcome Page
@@ -217,7 +213,7 @@ const fetchStudents = async () => {
     <div style={{ padding: "20px" }}>
       <h2>Students Data</h2>
 
-      {/* ✅ Student Info for PDF only */}
+      {/* Student Info */}
       <div style={{ marginBottom: "20px", padding: "10px", border: "1px solid gray" }}>
         <h3>Enter Student Info</h3>
         <input
@@ -251,7 +247,6 @@ const fetchStudents = async () => {
 
       {/* Filters */}
       <div style={{ marginBottom: "20px" }}>
-        {/* Branch Dropdown */}
         <select name="branch" value={filters.branch} onChange={handleChange} style={{ marginRight: "10px" }}>
           <option value="">-- Select Branch --</option>
           {filterOptions.branches.map((b, i) => (
@@ -259,7 +254,6 @@ const fetchStudents = async () => {
           ))}
         </select>
 
-        {/* District Dropdown */}
         <select name="district" value={filters.district} onChange={handleChange} style={{ marginRight: "10px" }}>
           <option value="">-- Select District --</option>
           {filterOptions.districts.map((d, i) => (
@@ -267,7 +261,6 @@ const fetchStudents = async () => {
           ))}
         </select>
 
-        {/* Caste Dropdown */}
         <select name="caste" value={filters.caste} onChange={handleChange} style={{ marginRight: "10px" }}>
           <option value="">-- Select Caste --</option>
           {filterOptions.categories.map((c, i) => (
@@ -275,7 +268,6 @@ const fetchStudents = async () => {
           ))}
         </select>
 
-        {/* Rank Inputs */}
         <input
           type="number"
           name="minRank"
@@ -293,7 +285,6 @@ const fetchStudents = async () => {
           style={{ marginRight: "10px" }}
         />
 
-        {/* Buttons */}
         <button onClick={fetchStudents} style={{ marginRight: "10px" }}>
           Search
         </button>
