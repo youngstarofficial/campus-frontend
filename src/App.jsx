@@ -43,20 +43,22 @@ function App() {
     ],
   };
 
-  const fetchStudents = async () => {
-    try {
-      console.log("🔎 Sending filters:", filters);
-      const res = await axios.get("https://campus-api-u919.onrender.com/students", {
-        params: filters,
-      });
-      console.log("✅ Response received:", res.data.length);
+const fetchStudents = async () => {
+  try {
+    console.log("🔎 Sending filters:", filters);
+    const res = await axios.get(
+      "https://campus-backend.onrender.com/students", // 👈 change this
+      { params: filters }
+    );
+    console.log("✅ Response received:", res.data.length);
 
-      // 👉 Directly use backend response (already unique)
-      setStudents(res.data);
-    } catch (err) {
-      console.error("Error fetching students:", err);
-    }
-  };
+    // 👉 Directly use backend response (already unique)
+    setStudents(res.data);
+  } catch (err) {
+    console.error("Error fetching students:", err);
+  }
+};
+
 
   // Fetch once when app opens
   useEffect(() => {
