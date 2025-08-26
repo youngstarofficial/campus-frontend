@@ -62,7 +62,7 @@ function App() {
     "EWS Girls OU": "ewsGirlsOu",
   };
 
-  // ✅ Fetch students from backend
+  // Fetch students from backend
   const fetchStudents = async () => {
     try {
       console.log("🔎 Sending filters:", filters);
@@ -75,7 +75,7 @@ function App() {
         new Map(res.data.map(s => [s._id, s])).values()
       );
 
-      // ✅ Sort alphabetically by instCode instead of instituteName
+      // Sort alphabetically by instCode
       const sortedStudents = uniqueStudents.sort((a, b) =>
         (a.instCode || "").localeCompare(b.instCode || "", undefined, { sensitivity: "base" })
       );
@@ -144,18 +144,48 @@ function App() {
     fetchStudents();
   };
 
-  if (!showApp) {
-    return (
-      <div style={{ height: "100vh", width: "100vw", display: "flex", justifyContent: "center", alignItems: "center", background: "#222", color: "white", textAlign: "center" }}>
-        <div>
-          <h1 style={{ fontSize: "60px", marginBottom: "20px" }}>🎓 Welcome 😎</h1>
-          <p style={{ fontSize: "24px", marginBottom: "30px" }}>RMR presents ❤️</p>
-          <button onClick={() => setShowApp(true)} style={{ padding: "15px 40px", fontSize: "22px", fontWeight: "bold", cursor: "pointer", background: "teal", color: "white", border: "none", borderRadius: "10px", boxShadow: "0px 4px 10px rgba(0,0,0,0.4)" }}>🚀 Open</button>
-        </div>
+ if (!showApp) {
+  return (
+    <div
+      style={{
+        height: "100vh",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center", // horizontal center
+        alignItems: "center",     // vertical center
+        background: "#222",
+        color: "white",
+      }}
+    >
+      <div
+        style={{
+          textAlign: "center",
+        }}
+      >
+        <h1 style={{ fontSize: "60px", marginBottom: "20px" }}>🎓 Welcome 😎</h1>
+        <p style={{ fontSize: "24px", marginBottom: "30px" }}>RMR presents ❤️</p>
+        <button
+          onClick={() => setShowApp(true)}
+          style={{
+            padding: "15px 40px",
+            fontSize: "22px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            background: "teal",
+            color: "white",
+            border: "none",
+            borderRadius: "10px",
+            boxShadow: "0px 4px 10px rgba(0,0,0,0.4)",
+          }}
+        >
+          🚀 Open
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
+  // Main App Screen
   return (
     <div style={{ padding: "20px" }}>
       <h2>Students Data</h2>
@@ -163,9 +193,28 @@ function App() {
       {/* Student Info */}
       <div style={{ marginBottom: "20px", padding: "10px", border: "1px solid gray" }}>
         <h3>Enter Student Info</h3>
-        <input type="text" name="name" placeholder="Student Name" value={studentInfo.name} onChange={(e) => setStudentInfo({ ...studentInfo, name: e.target.value })} style={{ marginRight: "10px" }} />
-        <input type="number" name="rank" placeholder="Rank" value={studentInfo.rank} onChange={(e) => setStudentInfo({ ...studentInfo, rank: e.target.value })} style={{ marginRight: "10px" }} />
-        <select name="caste" value={studentInfo.caste} onChange={(e) => setStudentInfo({ ...studentInfo, caste: e.target.value })} style={{ marginRight: "10px" }}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Student Name"
+          value={studentInfo.name}
+          onChange={(e) => setStudentInfo({ ...studentInfo, name: e.target.value })}
+          style={{ marginRight: "10px" }}
+        />
+        <input
+          type="number"
+          name="rank"
+          placeholder="Rank"
+          value={studentInfo.rank}
+          onChange={(e) => setStudentInfo({ ...studentInfo, rank: e.target.value })}
+          style={{ marginRight: "10px" }}
+        />
+        <select
+          name="caste"
+          value={studentInfo.caste}
+          onChange={(e) => setStudentInfo({ ...studentInfo, caste: e.target.value })}
+          style={{ marginRight: "10px" }}
+        >
           <option value="">-- Select Caste --</option>
           {filterOptions.categories.map((c, i) => <option key={i} value={c}>{c}</option>)}
         </select>
