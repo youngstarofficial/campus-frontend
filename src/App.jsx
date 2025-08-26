@@ -70,12 +70,10 @@ function App() {
 
       console.log("✅ Response received:", res.data.length);
 
-      // Remove duplicates if any (by _id)
       const uniqueStudents = Array.from(
         new Map(res.data.map(s => [s._id, s])).values()
       );
 
-      // Sort alphabetically by instCode
       const sortedStudents = uniqueStudents.sort((a, b) =>
         (a.instCode || "").localeCompare(b.instCode || "", undefined, { sensitivity: "base" })
       );
@@ -144,48 +142,47 @@ function App() {
     fetchStudents();
   };
 
- if (!showApp) {
-  return (
-    <div
-      style={{
-        height: "100vh",
-        width: "100vw",
-        display: "flex",
-        justifyContent: "center", // horizontal center
-        alignItems: "center",     // vertical center
-        background: "#222",
-        color: "white",
-      }}
-    >
+  // ✅ Welcome Screen Center Fix
+  if (!showApp) {
+    return (
       <div
         style={{
-          textAlign: "center",
+          height: "100vh",
+          width: "100vw",
+          display: "flex",
+          justifyContent: "center", 
+          alignItems: "center",     
+          background: "#222",
+          color: "white",
+          margin: 0,
+          padding: 0,
         }}
       >
-        <h1 style={{ fontSize: "60px", marginBottom: "20px" }}>🎓 Welcome 😎</h1>
-        <p style={{ fontSize: "24px", marginBottom: "30px" }}>RMR presents ❤️</p>
-        <button
-          onClick={() => setShowApp(true)}
-          style={{
-            padding: "15px 40px",
-            fontSize: "22px",
-            fontWeight: "bold",
-            cursor: "pointer",
-            background: "teal",
-            color: "white",
-            border: "none",
-            borderRadius: "10px",
-            boxShadow: "0px 4px 10px rgba(0,0,0,0.4)",
-          }}
-        >
-          🚀 Open
-        </button>
+        <div style={{ textAlign: "center" }}>
+          <h1 style={{ fontSize: "60px", marginBottom: "20px" }}>🎓 Welcome 😎</h1>
+          <p style={{ fontSize: "24px", marginBottom: "30px" }}>RMR presents ❤️</p>
+          <button
+            onClick={() => setShowApp(true)}
+            style={{
+              padding: "15px 40px",
+              fontSize: "22px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              background: "teal",
+              color: "white",
+              border: "none",
+              borderRadius: "10px",
+              boxShadow: "0px 4px 10px rgba(0,0,0,0.4)",
+            }}
+          >
+            🚀 Open
+          </button>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-  // Main App Screen
+  // ✅ Main App Screen
   return (
     <div style={{ padding: "20px" }}>
       <h2>Students Data</h2>
