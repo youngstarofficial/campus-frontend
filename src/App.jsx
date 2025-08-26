@@ -62,25 +62,28 @@ function App() {
     "EWS Girls OU": "ewsGirlsOu",
   };
 
-  // Fetch students from backend
+  // ✅ Fetch students from deployed backend (sorted by rank in backend)
   const fetchStudents = async () => {
     try {
       console.log("🔎 Sending filters:", filters);
-      const res = await axios.get("http://localhost:5000/students", { params: filters });
+      const res = await axios.get("https://campus-api-1.onrender.com/students", {
+        params: filters,
+      });
 
       console.log("✅ Response received:", res.data.length);
 
+      // Remove duplicates (just in case)
       const uniqueStudents = Array.from(
-        new Map(res.data.map(s => [s._id, s])).values()
+        new Map(res.data.map((s) => [s._id, s])).values()
       );
 
-      const sortedStudents = uniqueStudents.sort((a, b) =>
-        (a.instCode || "").localeCompare(b.instCode || "", undefined, { sensitivity: "base" })
-      );
-
-      setStudents(sortedStudents);
+      // ✅ Do NOT override backend rank sort
+      setStudents(uniqueStudents);
     } catch (err) {
-      console.error("❌ Error fetching students:", err.response ? err.response.data : err.message);
+      console.error(
+        "❌ Error fetching students:",
+        err.response ? err.response.data : err.message
+      );
     }
   };
 
@@ -142,7 +145,7 @@ function App() {
     fetchStudents();
   };
 
-  // ✅ Welcome Screen Center Fix
+  // ✅ Welcome Screen
   if (!showApp) {
     return (
       <div
@@ -150,8 +153,8 @@ function App() {
           height: "100vh",
           width: "100vw",
           display: "flex",
-          justifyContent: "center", 
-          alignItems: "center",     
+          justifyContent: "center",
+          alignItems: "center",
           background: "#222",
           color: "white",
           margin: 0,
@@ -182,7 +185,7 @@ function App() {
     );
   }
 
-  // ✅ Main App Screen
+  // ✅ Main App
   return (
     <div style={{ padding: "20px" }}>
       <h2>Students Data</h2>
@@ -213,7 +216,9 @@ function App() {
           style={{ marginRight: "10px" }}
         >
           <option value="">-- Select Caste --</option>
-          {filterOptions.categories.map((c, i) => <option key={i} value={c}>{c}</option>)}
+          {filterOptions.categories.map((c, i) => (
+            <option key={i} value={c}>{c}</option>
+          ))}
         </select>
       </div>
 
@@ -221,15 +226,21 @@ function App() {
       <div style={{ marginBottom: "20px" }}>
         <select name="branch" value={filters.branch} onChange={handleChange} style={{ marginRight: "10px" }}>
           <option value="">-- Select Branch --</option>
-          {filterOptions.branches.map((b, i) => <option key={i} value={b}>{b}</option>)}
+          {filterOptions.branches.map((b, i) => (
+            <option key={i} value={b}>{b}</option>
+          ))}
         </select>
         <select name="district" value={filters.district} onChange={handleChange} style={{ marginRight: "10px" }}>
           <option value="">-- Select District --</option>
-          {filterOptions.districts.map((d, i) => <option key={i} value={d}>{d}</option>)}
+          {filterOptions.districts.map((d, i) => (
+            <option key={i} value={d}>{d}</option>
+          ))}
         </select>
         <select name="caste" value={filters.caste} onChange={handleChange} style={{ marginRight: "10px" }}>
           <option value="">-- Select Caste --</option>
-          {filterOptions.categories.map((c, i) => <option key={i} value={c}>{c}</option>)}
+          {filterOptions.categories.map((c, i) => (
+            <option key={i} value={c}>{c}</option>
+          ))}
         </select>
         <input type="number" name="minRank" placeholder="Min Rank" value={filters.minRank} onChange={handleChange} style={{ marginRight: "10px" }} />
         <input type="number" name="maxRank" placeholder="Max Rank" value={filters.maxRank} onChange={handleChange} style={{ marginRight: "10px" }} />
@@ -246,7 +257,11 @@ function App() {
             <th>Institute</th>
             <th>Branch</th>
             <th>District</th>
-            {filters.caste ? <th>{filters.caste}</th> : Object.keys(casteFieldMap).map((c, i) => <th key={i}>{c}</th>)}
+            {filters.caste ? (
+              <th>{filters.caste}</th>
+            ) : (
+              Object.keys(casteFieldMap).map((c, i) => <th key={i}>{c}</th>)
+            )}
           </tr>
         </thead>
         <tbody>
